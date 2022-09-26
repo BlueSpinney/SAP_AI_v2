@@ -1,12 +1,14 @@
-import cv2 as cv
 from tkinter import *
 import pyautogui
 import cv2 as cv
 import numpy as np
 import time
+import valueRecogniton as VR
+
+
 
 #add all the other animals
-loclst = ["ant.png","bever.png"]
+loclst = ["ant","ape","bever","bison","bull","cricket","deer","dolphine","doodoo","duck","fish","giraff","godfly","gorila","hog","horse","kangoroo","leopard","mosqito","parrot","phantasticGus","pufffish","rabbit","racoon","rat","rihno","scorpio","seaotter","shark","sheep","shrimp","snail","snake","spider","stink","untitledGoose","worm"]
 cordlst = []
 dub = False
 hitman = []
@@ -62,21 +64,24 @@ def drag_and_drop(upper : list,down: list):
     mid = upper[int(((len(upper) - 1) / 2) - 0.1)][2] + upper[int(((len(upper) - 1) / 2) - 0.1)][1]
     for i in range(len(down)):
         if down[i][1] + down[i][2] > mid:
-            pyautogui.click(down[i][3][0] + 125,down[i][3][1] + 125)
             #test if works
             for i in range(len(slots)):
                 if slots[i].empty == True:
-                    pyautogui.click(slots[i].cor)
+                    slots[i].set((down[i][3][0] + 125,down[i][3][1] + 125),down[i][0],down[i][1] + down[i][2])
+                    time.sleep(2)
+                    break
         else:
             continue
 
 def id_tag(location):
+    location = location + ".png"
 
     global oldloc,cordlst,dub
     
     ptlst = []
 
     img_rgb = cv.imread('src.png')
+    print(location)
 
     img_gray = cv.cvtColor(img_rgb, cv.COLOR_BGR2GRAY)
     template = cv.imread(location,0)
@@ -84,7 +89,7 @@ def id_tag(location):
     w, h = template.shape[::-1]
 
     res = cv.matchTemplate(img_gray,template,cv.TM_CCOEFF_NORMED)
-    threshold = 0.42
+    threshold = 0.60
 
     loc = np.where( res >= threshold)
     
@@ -97,8 +102,8 @@ def id_tag(location):
 
     for i in range(len(ptlst)):
         if i == 0:
-            #add value logic
-            cordlst.append(token(location,1,1,ptlst[i]))
+            values = VR.find(ptlst[i])
+            cordlst.append(token(location,values[0],values[1],ptlst[i]))
             continue
         point = ptlst[i]
         opoint = ptlst[i - 1]
@@ -109,10 +114,6 @@ def id_tag(location):
         else:
             
             cordlst.append(token(location,1,1,point))
-
-
-    
-
 
     cv.imwrite('res.png',img_rgb)
 
