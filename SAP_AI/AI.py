@@ -4,6 +4,7 @@ import cv2 as cv
 import numpy as np
 import time
 import valueRecogniton as VR
+import itemrec as IR
 
 
 
@@ -38,6 +39,18 @@ class slot:
 oldloc = (0,0)
 slots = [slot((524,441)), slot((671, 441)),slot((818, 441)),slot((965, 441)),slot((1112, 441))]
 
+# not in use yet
+class Item:
+    def __init__(self,cor,effect):
+        self.cor = cor
+        self.effect = effect
+    
+    def use(self,slot):
+        pyautogui.click(self.cor)
+        pyautogui.click(slot.cor)
+        slot.val += self.effect
+
+
 class token:
     def __init__(self,name,attack,health,cordinates):
         self.name = name
@@ -70,6 +83,8 @@ def drag_and_drop(upper : list,down: list):
                     slots[i].set((down[i][3][0] + 125,down[i][3][1] + 125),down[i][0],down[i][1] + down[i][2])
                     time.sleep(2)
                     break
+                elif slots[i].val < down[i][1] + down[i][2]:
+                    slots[i].set((down[i][3][0] + 125,down[i][3][1] + 125),down[i][0],down[i][1] + down[i][2])
         else:
             continue
 
