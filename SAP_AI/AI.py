@@ -70,21 +70,29 @@ def check_if_empty(lst):
     else:
         return lst
 
+def look_for_empty():
+    for i in range(len(slots)):
+        if slots[i].empty == True:
+            return True
+
+    return False
+
 def drag_and_drop(upper : list,down: list):
     upper = check_if_empty(upper)
     down = check_if_empty(down)
 
     mid = upper[int(((len(upper) - 1) / 2) - 0.1)][2] + upper[int(((len(upper) - 1) / 2) - 0.1)][1]
     for i in range(len(down)):
-        if down[i][1] + down[i][2] > mid:
-            #test if works
+        if down[i][1] + down[i][2] > mid or look_for_empty() == True:
+
             for i in range(len(slots)):
                 if slots[i].empty == True:
                     slots[i].set((down[i][3][0] + 125,down[i][3][1] + 125),down[i][0],down[i][1] + down[i][2])
-                    time.sleep(2)
+                    time.sleep(5)
                     break
                 elif slots[i].val < down[i][1] + down[i][2]:
                     slots[i].set((down[i][3][0] + 125,down[i][3][1] + 125),down[i][0],down[i][1] + down[i][2])
+                    time.sleep(5)
         else:
             continue
 
@@ -170,6 +178,10 @@ def start():
         y = curtok[3][1] + 125
         time.sleep(0.1)
         pyautogui.click(x,y)
+
+    upper = sorted(upper,key=lambda x: x[1] + x[2])
+    down = sorted(down,key=lambda x: x[3][0],)
+    down = down[::-1]
 
     print("upper : {} down : {}".format(upper,down))
 
