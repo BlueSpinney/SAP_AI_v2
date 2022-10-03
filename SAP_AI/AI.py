@@ -5,14 +5,17 @@ import numpy as np
 import time
 import valueRecogniton as VR
 import itemrec as IR
+from random import randint
 
-
+lost = False
 
 #add all the other animals
 loclst = ["ant","ape","bever","bison","bull","cricket","deer","dolphine","doodoo","duck","fish","giraff","godfly","gorila","hog","horse","kangoroo","leopard","mosqito","parrot","phantasticGus","pufffish","rabbit","racoon","rat","rihno","scorpio","seaotter","shark","sheep","shrimp","snail","snake","spider","stink","untitledGoose","worm"]
 cordlst = []
 dub = False
 hitman = []
+name_cordinates_1 = [(375, 399),(942, 399),(1528, 399)]
+name_cordinates_2 = [(375, 691),(942, 691),(1528, 691)]
 
 class slot:
     def __init__(self,cor):
@@ -25,7 +28,9 @@ class slot:
         if self.empty == False:
             pyautogui.click(self.cor)
             pyautogui.click(1041, 983)
+            time.sleep(2)
         pyautogui.click(animal_posistion)
+        time.sleep(1)
         pyautogui.click(self.cor)
         self.animal = animal_name
         self.empty = False
@@ -42,13 +47,15 @@ slots = [slot((524,441)), slot((671, 441)),slot((818, 441)),slot((965, 441)),slo
 # not in use yet
 class Item:
     def __init__(self,cor,effect):
+        self.effects = {'helth':'helth','attack':'attack','store':'store','spawn':'spawn','other': []}
         self.cor = cor
-        self.effect = effect
+        self.effect = self.effects[effect]
+        self.val = None
     
     def use(self,slot):
         pyautogui.click(self.cor)
         pyautogui.click(slot.cor)
-        slot.val += self.effect
+        slot.val += self.val
 
 
 class token:
@@ -85,14 +92,15 @@ def drag_and_drop(upper : list,down: list):
     for i in range(len(down)):
         if down[i][1] + down[i][2] > mid or look_for_empty() == True:
 
-            for i in range(len(slots)):
-                if slots[i].empty == True:
-                    slots[i].set((down[i][3][0] + 125,down[i][3][1] + 125),down[i][0],down[i][1] + down[i][2])
+            for x in range(len(slots)):
+                if slots[x].empty == True:
+                    slots[x].set((down[i][3][0] + 20,down[i][3][1] + 20),down[i][0],down[i][1] + down[i][2])
                     time.sleep(5)
                     break
-                elif slots[i].val < down[i][1] + down[i][2]:
-                    slots[i].set((down[i][3][0] + 125,down[i][3][1] + 125),down[i][0],down[i][1] + down[i][2])
+                elif slots[x].val < down[i][1] + down[i][2] and look_for_empty() == False:
+                    slots[x].set((down[i][3][0] + 20,down[i][3][1] + 20),down[i][0],down[i][1] + down[i][2])
                     time.sleep(5)
+                    break
         else:
             continue
 
@@ -142,50 +150,70 @@ def id_tag(location):
 
 
 def start():
+    global lost,cordlst,dub,hitman
+
     starttxt = Label(main,text="starting in 5 seconds")
     starttxt.pack()
     time.sleep(5)
     starttxt.pack_forget()
-    scr = pyautogui.screenshot()
-    scr.save("src.png")
+    iterations = 0
+    while lost == False:
+        cordlst = []
+        dub = False
+        hitman = []
 
-    for loc in loclst:
-        id_tag(loc)
-    print(cordlst)
-    subtractor = 0
+        scr = pyautogui.screenshot()
+        scr.save("src.png")
 
-    tokenlst = []
-    print(f"hitman : {hitman}")
-    
-    for i in range(int(len(cordlst))):
-        print(cordlst[i])
-        if cordlst[i].returnself() not in tokenlst:
-            tokenlst.append(cordlst[i].returnself())
+        for loc in loclst:
+            id_tag(loc)
+        print(cordlst)
 
-    upper = []
-    down = []
+        tokenlst = []
+        print(f"hitman : {hitman}")
+        
+        for i in range(int(len(cordlst))):
+            print(cordlst[i])
+            if cordlst[i].returnself() not in tokenlst:
+                tokenlst.append(cordlst[i].returnself())
 
-    for token in tokenlst:
-        current_token = token
-        if current_token[3][1] > 555:
-            down.append(current_token)
-        else:
-            upper.append(current_token)
+        upper = []
+        down = []
 
-    for i in range(len(tokenlst)):
-        curtok = tokenlst[i]
-        x = curtok[3][0] + 125
-        y = curtok[3][1] + 125
-        time.sleep(0.1)
-        pyautogui.click(x,y)
+        for token in tokenlst:
+            current_token = token
+            if current_token[3][1] > 555:
+                down.append(current_token)
+            else:
+                upper.append(current_token)
 
-    upper = sorted(upper,key=lambda x: x[1] + x[2])
-    down = sorted(down,key=lambda x: x[3][0],)
-    down = down[::-1]
+        upper = sorted(upper,key=lambda x: x[1] + x[2])
+        down = sorted(down,key=lambda x: x[3][0],)
+        down = down[::-1]
 
-    print("upper : {} down : {}".format(upper,down))
+        print("upper : {} down : {}".format(upper,down))
 
-    drag_and_drop(upper,down)
+        drag_and_drop(upper,down)
+        time.sleep(1)
+        pyautogui.click(1536, 969)
+        time.sleep(1)
+        pyautogui.click(1238, 711)
+        if iterations == 0:
+            iterations = 1
+            time.sleep(5)
+            rand1 = randint(0,2)
+            rand2 = randint(0,2)
+            pyautogui.click(name_cordinates_1[rand1])
+            time.sleep(0.1)
+            pyautogui.click(name_cordinates_2[rand2])
+            time.sleep(0.1)
+
+            pyautogui.click(1697, 986)
+        time.sleep(20)
+        pyautogui.click(893, 428)
+        time.sleep(3)
+        pyautogui.click(893, 428)
+        time.sleep(2)
     
     
 
