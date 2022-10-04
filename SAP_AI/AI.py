@@ -14,6 +14,7 @@ loclst = ["ant","ape","bever","bison","bull","cricket","deer","dolphine","doodoo
 cordlst = []
 dub = False
 hitman = []
+chupper = []
 name_cordinates_1 = [(375, 399),(942, 399),(1528, 399)]
 name_cordinates_2 = [(375, 691),(942, 691),(1528, 691)]
 
@@ -35,6 +36,13 @@ class slot:
         self.animal = animal_name
         self.empty = False
         self.val = new_val
+    
+    def upgrade(self,duplicat_position):
+        pyautogui.click(duplicat_position)
+        time.sleep(1)
+        pyautogui.click(self.cor)
+        self.val += 1
+
 
 
 
@@ -84,19 +92,33 @@ def look_for_empty():
 
     return False
 
+def look_for_duplicat(name):
+    for i in range(len(slots)):
+        if slots[i].animal == name:
+            return True
+    return False
+
 def drag_and_drop(upper : list,down: list):
+    global chupper
     upper = check_if_empty(upper)
     down = check_if_empty(down)
+    chupper = sorted(upper,key=lambda x: x[1] + x[2])
 
-    mid = upper[int(((len(upper) - 1) / 2) - 0.1)][2] + upper[int(((len(upper) - 1) / 2) - 0.1)][1]
+    mid = chupper[int(((len(chupper) - 1) / 2) - 0.1)][2] + chupper[int(((len(chupper) - 1) / 2) - 0.1)][1]
     for i in range(len(down)):
         if down[i][1] + down[i][2] > mid or look_for_empty() == True:
 
             for x in range(len(slots)):
-                if slots[x].empty == True:
+                if slots[x].empty == True and look_for_duplicat(down[i][0]) != True:
                     slots[x].set((down[i][3][0] + 20,down[i][3][1] + 20),down[i][0],down[i][1] + down[i][2])
                     time.sleep(5)
                     break
+
+                elif look_for_duplicat(down[i][0]) == True:
+                    slots[x].upgrade((down[i][3][0] + 20,down[i][3][1] + 20))
+                    time.sleep(5)
+                    break
+
                 elif slots[x].val < down[i][1] + down[i][2] and look_for_empty() == False:
                     slots[x].set((down[i][3][0] + 20,down[i][3][1] + 20),down[i][0],down[i][1] + down[i][2])
                     time.sleep(5)
@@ -150,7 +172,7 @@ def id_tag(location):
 
 
 def start():
-    global lost,cordlst,dub,hitman
+    global lost,cordlst,dub,hitman,chupper
 
     starttxt = Label(main,text="starting in 5 seconds")
     starttxt.pack()
@@ -187,7 +209,6 @@ def start():
             else:
                 upper.append(current_token)
 
-        upper = sorted(upper,key=lambda x: x[1] + x[2])
         down = sorted(down,key=lambda x: x[3][0],)
         down = down[::-1]
 
@@ -209,11 +230,13 @@ def start():
             time.sleep(0.1)
 
             pyautogui.click(1697, 986)
-        time.sleep(20)
+        time.sleep(30)
         pyautogui.click(893, 428)
         time.sleep(3)
         pyautogui.click(893, 428)
-        time.sleep(2)
+        time.sleep(1)
+        pyautogui.click(100,100)
+        time.sleep(4)
     
     
 
