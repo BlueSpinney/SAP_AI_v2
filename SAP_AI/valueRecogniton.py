@@ -68,4 +68,3 @@ def find(cor):
     
 
     return (attackval,helthval)
-print(find((453, 635)))
