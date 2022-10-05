@@ -22,7 +22,7 @@ def applycolormask(img,lower,upper):
 
 def remove_sides(img):
     shape = (img.shape[0] + 5,img.shape[1] + 5)
-    cv.rectangle(img,(0,0),shape,(0,0,0),35)
+    cv.rectangle(img,(0,0),shape,(0,0,0),30)
 
 def initfy(cor):
     integer = []
@@ -33,7 +33,7 @@ def initfy(cor):
         try:
             return int("".join(integer))
         except:
-            return 0
+            return 1
     else:
         return cor
 
@@ -42,8 +42,8 @@ def find(cor):
     img = cv.imread('src.png')
     attack = img
     helth = img
-    attack = img[cor[1] + 100:cor[1] + 180, cor[0] + -10:cor[0] + 80]
-    helth = img[cor[1] + 100:cor[1] + 170, cor[0] + 70:cor[0] + 140]
+    attack = img[cor[1] + 100:cor[1] + 180, cor[0] + -10:cor[0] + 90]
+    helth = img[cor[1] + 100:cor[1] + 180, cor[0] + 70:cor[0] + 160]
 
     attack = applycolormask(attack,[0, 0, 150],[0, 250, 255])
     helth = applycolormask(helth,[0, 0, 150],[0, 250, 255])
@@ -68,3 +68,4 @@ def find(cor):
     
 
     return (attackval,helthval)
+print(find((453, 635)))
