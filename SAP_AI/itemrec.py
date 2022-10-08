@@ -2,19 +2,16 @@ from shutil import ExecError
 import cv2 as cv
 import numpy as np
 
-items = [('apple',' + 2'),('chilli',' + 5'),('choclate','+ 4'),('garlac','* 1.5'),('honey',' + 3'),('meat','+ 4')]
+items = [['apple',' + 2'],['chilli',' + 5'],['choclate','+ 4'],['garlac','* 1.5'],['honey',' + 3'],['meat','+ 4']]
 cordinate_list = {}
 def get_current_items(img_name,i):
     print(img_name)
 
-    #"F:\\Kyle\\Desktop\\Coinjar\\Test images\\ten.png"
     merge_img = cv.imread("C:\\Users\\Jerome\\OneDrive\\Desktop\\SAP_AI\\items\\" + img_name,0)
     loc = None
 
     current_sorce = cv.imread('src.png')
     current_sorce = current_sorce[600:800,1000:1800]
-
-    img_gray = cv.cvtColor(current_sorce, cv.COLOR_BGR2GRAY)
     img_rgb = cv.imread('src.png')
 
     img_gray = cv.cvtColor(img_rgb, cv.COLOR_BGR2GRAY)
@@ -39,3 +36,5 @@ def main():
         print('\n')
         get_current_items(parameter_for_item_gathering,i)
     return cordinate_list
+
+
