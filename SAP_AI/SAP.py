@@ -8,17 +8,22 @@ import time
 import valueRecogniton as VR
 import itemrec as IR
 from random import randint, randrange
+import toolkit as tools
 
 lost = False
 
 #add all the other animals
 loclst = ["ant","ape","badger","bafallo","bever","bull","camel","crab","cricket","crockodile","deer","dog","dolphine","doodoo","duck","elephant","fish","flamingo","giraff","gose","hedgehob","hippo","horse","kangaroo","lobstar","mosquito","otter","parrot","peacock","penguin","pig","pufferfish","rabbit","rat","rooster","scorpio","seal","shark","sheep","snail","spider","squril","stinky","turkey","turtle","whale","worm"]
+
+
 cordlst = []
 dub = False
 hitman = []
 chupper = []
 name_cordinates_1 = [(375, 399),(942, 399),(1528, 399)]
 name_cordinates_2 = [(375, 691),(942, 691),(1528, 691)]
+
+Change_Reward = 0
 
 class slot:
     def __init__(self,cor,index):
@@ -101,78 +106,92 @@ def look_for_duplicat(name):
             return [True,i]
     return [False,None]
 
-#time O(n) Space O(n)
-def find_best_option_for_animal_replacement(_pd,down):
-    save = {}
-    for d in down:
-        save[len(save)] = d
-    ava = _pd
-    slotsava = slots
 
-    swap_list = {}
-    for slot in slotsava:
-        if slot.val == None:
-            slot.val = -1
-        for i in range(len(ava)):
-            if slot.val < ava[i][1] + ava[i][2]:
-                if slot.index not in swap_list:
-                    swap_list[slot.index] = [ava[i]]
-                    ava.pop(i)
-                    break
-                else:
-                    if swap_list[slot.index][1] + swap_list[slot.index][2] < ava[i][1] + ava[i][2]:
-                        swap_list[slot.index] = [ava[i]]
-                        ava[i].pop(i)
-                        break
-        if slot.val == -1:
-            slot.val = None
 
-    return(swap_list,save)
+def drag_and_drop(upper : list,down: list,available_items : dict):
+    global chupper,Change_Reward
 
-def drag_and_drop(upper : list,down: list):
-    global chupper
+    def Reset(val):
+        time.sleep(5)
+        val = 0
+        return val
+
+    # Get the least-Valued token from Upper and check if down or upper is empty
     upper = check_if_empty(upper)
     down = check_if_empty(down)
     chupper = sorted(upper,key=lambda x: x[1] + x[2])
 
     mid = chupper[0][2] + chupper[0][1]
 
-    _pd = down
+    # Create value list of all tokens available
+    value_List = []
 
-    #not in use yet
-    recived = find_best_option_for_animal_replacement(_pd,down)
-    for tokens in recived[1].keys():
-        down.append(recived[1][tokens])
+    for i in range(len(down)):
+        value_List.append(down[i][1] + down[i][2])
     
-    down = sorted(down, key= lambda x : x[3][0])
-    down = down[::-1]
-    optimal_replacement = recived[0]
-    print('\n')
-    print(optimal_replacement)
+    pop_compensator = 0
+    money = 10
+    
 
+
+    # Placement Logic
     for i in range(len(down)):
         if down[i][1] + down[i][2] > mid or look_for_empty() == True:
             duplicatVal = look_for_duplicat(down[i][0])
+            animalData = tools.fetch_animal_Value_data(down[i][0][48:len(down[i][0])-4])
+
+            if animalData != None:
+                res = tools.Adjust_Animal_Values(animalData,x)
+                down[i][1] = res['stanValue']
+                down[i][2] = 0
 
             for x in range(len(slots)):
-                if slots[x].empty == True and duplicatVal[0] != True:
+                if slots[x].empty == True and duplicatVal[0] != True and money >= 3:
                     slots[x].set((down[i][3][0] + 20,down[i][3][1] + 20),down[i][0],down[i][1] + down[i][2])
-                    time.sleep(5)
-                    break
+                    money -= 3
+                    Change_Reward = Reset(Change_Reward)
 
-                elif duplicatVal[0] == True:
+                elif duplicatVal[0] == True and money >= 3:
                     slots[duplicatVal[1]].upgrade((down[i][3][0] + 20,down[i][3][1] + 20))
-                    time.sleep(5)
-                    break
+                    money -= 3
+                    Change_Reward = Reset(Change_Reward)
 
-                elif slots[x].val < down[i][1] + down[i][2] and look_for_empty() == False:
+
+                elif slots[x].val < down[i][1] + down[i][2] + Change_Reward and look_for_empty() == False and tools.is_best_option(slots[x],i - pop_compensator,value_List) and money >= 2:
                     slots[x].set((down[i][3][0] + 20,down[i][3][1] + 20),down[i][0],down[i][1] + down[i][2])
-                    time.sleep(5)
+                    pop_compensator += 1
+                    money -= 2
+                    value_List.pop(i - pop_compensator)
+                    Change_Reward = Reset(Change_Reward)
+
+                else:
+                    Change_Reward += 2
+                
+                if Change_Reward == 0:
                     break
         else:
             continue
+    # item usage Logic
+    if money >= 3:
+        potential_values = tools.should_use_item(slots,available_items)
+        sorted_options = tools.return_best_item(potential_values)
+        i = 0
+        while money >= 3 and i < len(sorted_options) - 1:
+            
+            pyautogui.click(sorted_options[i][1])
+            time.sleep(1)
+            pyautogui.click(slots[sorted_options[i][2]].cor)
+
+            i += 1
+            money -= 3
+        
+
+
+
+
 
 def id_tag(location):
+    name = location
     location = 'C:\\Users\\Jerome\\OneDrive\Desktop\\SAP_AI\\animals\\' + location + ".png"
 
     global oldloc,cordlst,dub
@@ -201,14 +220,18 @@ def id_tag(location):
 
     for i in range(len(ptlst)):
         if i == 0:
-            values = VR.find(ptlst[i])
-            cordlst.append(token(location,values[0],values[1],ptlst[i]))
-            continue
+            res = tools.fetch_animal_Value_data(name)
+            if res == None:
+                values = VR.find(ptlst[i])
+                cordlst.append(token(location,values[0],values[1],ptlst[i]))
+                continue
+            else:
+                val = [res["stanValue"] / 2,res["stanValue"] / 2]
+                cordlst.append(token(location,val[0],val[1],ptlst[i]))
+
         point = ptlst[i]
         opoint = ptlst[i - 1]
-        print(opoint, point , point[0] - opoint[0])
         if point[0] - opoint[0] < 5:
-            print(point[0] - opoint[0])
             continue
         else:
             
@@ -227,6 +250,7 @@ def start():
     iterations = 0
     
     while lost == False:
+        available_items = IR.main()
         cordlst = []
         dub = False
         hitman = []
@@ -236,13 +260,11 @@ def start():
 
         for loc in loclst:
             id_tag(loc)
-        print(cordlst)
 
         tokenlst = []
-        print(f"hitman : {hitman}")
         
         for i in range(int(len(cordlst))):
-            print(cordlst[i])
+
             if cordlst[i].returnself() not in tokenlst:
                 tokenlst.append(cordlst[i].returnself())
 
@@ -261,7 +283,7 @@ def start():
 
         print("upper : {} down : {}".format(upper,down))
 
-        drag_and_drop(upper,down)
+        drag_and_drop(upper,down,available_items)
         time.sleep(1)
         pyautogui.click(1536, 969)
         time.sleep(1)
@@ -280,7 +302,6 @@ def start():
 
         while True:
             time.sleep(10)
-            print("searching")
 
             scr = pyautogui.screenshot()
             scr.save("src.png")
@@ -299,7 +320,6 @@ def start():
 
             #Make functional for multiple items of the same type
             for pt in zip(*loc[::-1]):
-                print("found")
                 over = True
                 break
             if over == True:
