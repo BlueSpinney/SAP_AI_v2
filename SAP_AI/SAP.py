@@ -1,3 +1,4 @@
+# Super auto pets AI
 
 from tkinter import *
 from turtle import down
