@@ -71,3 +71,51 @@ def return_best_item(potential_values):
     return val_list
         
 
+#O(n^3) Time O(n) space | cubed space,liniar time
+def findSwaps(slots : list):
+    tokenList = []
+    for token in slots:
+        if token.animal == None:
+            continue
+        n = token.animal
+        n = n[48:len(n)-4]
+        tokenList.append({'name' : n, 'index': token.index, 'id' : len(tokenList)})
+    
+    json_File = open('animalValues.json')
+    animal_Values = json.load(json_File)
+
+    partners = {}
+
+    for i in range(len(tokenList)):
+        cur_animal = tokenList[i]
+        for x in range(len(tokenList)):
+            potentialPartner = tokenList[x]
+            identification = [cur_animal['id'],potentialPartner['id']]
+            identification.sort()
+            identification = str(identification)
+            print(animal_Values[potentialPartner['name']]["preffedPos"])
+            print(cur_animal['index'])
+            lookup = animal_Values[potentialPartner['name']]["preffedPos"]
+
+            if lookup == None:
+                continue
+
+            if cur_animal['index'] in lookup and potentialPartner['index'] not in lookup:
+                try:
+                    partners[identification] = partners[identification]
+                except:
+                    partners[identification] = [cur_animal,potentialPartner]
+                break
+    
+    return partners
+
+
+
+
+
+
+
+    
+
+        
+
