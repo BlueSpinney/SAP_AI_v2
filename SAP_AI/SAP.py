@@ -1,5 +1,3 @@
-# Super auto pets AI
-
 from tkinter import *
 from turtle import down
 import pyautogui
@@ -109,11 +107,11 @@ def look_for_duplicat(name):
 
 
 
-def drag_and_drop(upper : list,down: list,available_items : dict):
+def drag_and_drop(upper : list,down: list,available_items : dict,):
     global chupper,Change_Reward
 
     def Reset(val):
-        time.sleep(5)
+        time.sleep(2)
         val = 0
         return val
 
@@ -185,7 +183,25 @@ def drag_and_drop(upper : list,down: list,available_items : dict):
 
             i += 1
             money -= 3
-        
+    
+    #Charactar swap logic
+    partners = tools.findSwaps(slots)
+
+    for k in partners.keys():
+        currentPartners = partners[k]
+        p1D = slots[currentPartners[1]['index']]
+        p2D = slots[currentPartners[0]['index']]
+        transferData = [p1D.val,p1D.animal]
+
+        slots[currentPartners[1]['index']].val = p2D.val + 2
+        slots[currentPartners[1]['index']].animal = p2D.animal
+
+        slots[currentPartners[0]['index']].val = transferData[0]
+        slots[currentPartners[0]['index']].animal = transferData[1]
+
+        pyautogui.click(p1D.cor)
+        time.sleep(1)
+        pyautogui.click(p2D.cor)
 
 
 
@@ -251,7 +267,7 @@ def start():
     iterations = 0
     
     while lost == False:
-        available_items = IR.main()
+        available_items= IR.main()
         cordlst = []
         dub = False
         hitman = []
