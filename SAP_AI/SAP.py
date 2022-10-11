@@ -1,3 +1,5 @@
+#Super Auto Pets AI work in Progress pre Alpha Version
+
 from tkinter import *
 from turtle import down
 import pyautogui
