@@ -75,10 +75,12 @@ def return_best_item(potential_values):
 def findSwaps(slots : list):
     tokenList = []
     for token in slots:
-        if token.animal == None:
-            continue
+
         n = token.animal
-        n = n[48:len(n)-4]
+        if n != None:
+            n = n[48:len(n)-4]
+        else:
+            n = "None"
         tokenList.append({'name' : n, 'index': token.index, 'id' : len(tokenList)})
     
     json_File = open('animalValues.json')
@@ -108,14 +110,3 @@ def findSwaps(slots : list):
                 break
     
     return partners
-
-
-
-
-
-
-
-    
-
-        
-
