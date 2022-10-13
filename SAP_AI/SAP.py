@@ -1,6 +1,7 @@
-#Super Auto Pets AI work in Progress pre-Alpha Version
+#Super Auto Pets AI work in Progress pre Alpha Version
 
 from tkinter import *
+from turtle import down
 import pyautogui
 import cv2 as cv
 import numpy as np
@@ -172,9 +173,11 @@ def drag_and_drop(upper : list,down: list,available_items : dict,):
         else:
             continue
     # item usage Logic
-    if money >= 3:
+    if money >= 2:
         potential_values = tools.should_use_item(slots,available_items)
         sorted_options = tools.return_best_item(potential_values)
+        print(sorted_options)
+        sorted_options = sorted(sorted_options,key=lambda x: x[1][1])
         i = 0
         while money >= 3 and i < len(sorted_options) - 1:
             
