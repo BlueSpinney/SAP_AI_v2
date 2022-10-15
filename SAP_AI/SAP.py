@@ -192,16 +192,19 @@ def drag_and_drop(upper : list,down: list,available_items : dict,):
     partners = tools.findSwaps(slots)
 
     for k in partners.keys():
+
         currentPartners = partners[k]
         p1D = slots[currentPartners[1]['index']]
         p2D = slots[currentPartners[0]['index']]
         transferData = [p1D.val,p1D.animal]
 
-        slots[currentPartners[1]['index']].val = p2D.val + 2
+
+        slots[currentPartners[1]['index']].val = p2D.val + 2 or 0 + 2
         slots[currentPartners[1]['index']].animal = p2D.animal
 
-        slots[currentPartners[0]['index']].val = transferData[0]
+        slots[currentPartners[0]['index']].val = transferData[0] or 0 + 2
         slots[currentPartners[0]['index']].animal = transferData[1]
+
 
         pyautogui.click(p1D.cor)
         time.sleep(1)
