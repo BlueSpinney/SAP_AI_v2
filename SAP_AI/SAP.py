@@ -354,7 +354,7 @@ def start():
         time.sleep(1)
         pyautogui.click(150,150)
         pyautogui.click(150,150)
-        time.sleep(4)
+        time.sleep(5)
     
     
 
