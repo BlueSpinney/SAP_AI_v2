@@ -1,4 +1,4 @@
-#Super Auto Pets AI work in Progress pre Alpha Version
+#Super Auto Pets AI work in Progress pre Alpha Version (without item rec)
 
 from tkinter import *
 import pyautogui
