@@ -1,4 +1,4 @@
-#Super Auto Pets AI work in Progress pre Alpha Version (with partial item recognition)
+#Super Auto Pets AI work in Progress pre Alpha Version (with partial item recognition) v3.3
 
 from tkinter import *
 import pyautogui
