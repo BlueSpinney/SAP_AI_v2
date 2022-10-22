@@ -15,7 +15,6 @@ lost = False
 #add all the other animals
 loclst = ["ant","ape","badger","bafallo","bever","bull","camel","crab","cricket","crockodile","deer","dog","dolphine","doodoo","duck","elephant","fish","flamingo","giraff","gose","hedgehob","hippo","horse","kangaroo","lobstar","mosquito","otter","parrot","peacock","penguin","pig","pufferfish","rabbit","rat","rooster","scorpio","seal","shark","sheep","snail","spider","squril","stinky","turkey","turtle","whale","worm"]
 
-
 cordlst = []
 dub = False
 hitman = []
@@ -51,12 +50,6 @@ class slot:
         pyautogui.click(self.cor)
         self.val += 1
 
-
-
-
-
-    
-
 oldloc = (0,0)
 slots = [slot((524,441),0), slot((671, 441),1),slot((818, 441),2),slot((965, 441),3),slot((1112, 441),4)]
 
@@ -72,7 +65,6 @@ class Item:
         pyautogui.click(self.cor)
         pyautogui.click(slot.cor)
         slot.val += self.val
-
 
 class token:
     def __init__(self,name,attack,health,cordinates):
@@ -146,17 +138,20 @@ def drag_and_drop(upper : list,down: list,available_items : dict,):
                 down[i][2] = 0
 
             for x in range(len(slots)):
+                
+                #Empty Logic
                 if slots[x].empty == True and duplicatVal[0] != True and money >= 3:
                     slots[x].set((down[i][3][0] + 20,down[i][3][1] + 20),down[i][0],down[i][1] + down[i][2])
                     money -= 3
                     Change_Reward = Reset(Change_Reward)
 
+                #Duplicat Logic
                 elif duplicatVal[0] == True and money >= 3:
                     slots[duplicatVal[1]].upgrade((down[i][3][0] + 20,down[i][3][1] + 20))
                     money -= 3
                     Change_Reward = Reset(Change_Reward)
 
-
+                #Replace Logic
                 elif slots[x].val < down[i][1] + down[i][2] + Change_Reward and look_for_empty() == False and tools.is_best_option(slots[x],i - pop_compensator,value_List) and money >= 2:
                     slots[x].set((down[i][3][0] + 20,down[i][3][1] + 20),down[i][0],down[i][1] + down[i][2])
                     pop_compensator += 1
@@ -171,7 +166,7 @@ def drag_and_drop(upper : list,down: list,available_items : dict,):
                     break
         else:
             continue
-    # item usage Logic
+    # Item usage Logic
     if money >= 2:
         potential_values = tools.should_use_item(slots,available_items)
         sorted_options = tools.return_best_item(potential_values)
@@ -179,17 +174,14 @@ def drag_and_drop(upper : list,down: list,available_items : dict,):
         sorted_options = sorted(sorted_options,key=lambda x: x[1][1])
         i = 0
         while money >= 3 and i < len(sorted_options) - 1:
-            
             pyautogui.click(sorted_options[i][1])
             time.sleep(1)
             pyautogui.click(slots[sorted_options[i][2]].cor)
-
             i += 1
             money -= 3
     
     #Charactar swap logic
     partners = tools.findSwaps(slots)
-
     for k in partners.keys():
 
         currentPartners = partners[k]
@@ -197,41 +189,30 @@ def drag_and_drop(upper : list,down: list,available_items : dict,):
         p2D = slots[currentPartners[0]['index']]
         transferData = [p1D.val,p1D.animal]
 
-
         slots[currentPartners[1]['index']].val = p2D.val + 2 or 0 + 2
         slots[currentPartners[1]['index']].animal = p2D.animal
 
         slots[currentPartners[0]['index']].val = transferData[0] or 0 + 2
         slots[currentPartners[0]['index']].animal = transferData[1]
 
-
         pyautogui.click(p1D.cor)
         time.sleep(1)
         pyautogui.click(p2D.cor)
 
-
-
-
-
 def id_tag(location):
     name = location
     location = 'C:\\Users\\Jerome\\OneDrive\Desktop\\SAP_AI\\animals\\' + location + ".png"
-
     global oldloc,cordlst,dub
     
     ptlst = []
-
     img_rgb = cv.imread('src.png')
     print(location)
 
     img_gray = cv.cvtColor(img_rgb, cv.COLOR_BGR2GRAY)
     template = cv.imread(location,0)
-
     w, h = template.shape[::-1]
-
     res = cv.matchTemplate(img_gray,template,cv.TM_CCOEFF_NORMED)
     threshold = 0.60
-
     loc = np.where( res >= threshold)
     
     #get cordinates and draw rectangle
@@ -283,11 +264,9 @@ def start():
 
         for loc in loclst:
             id_tag(loc)
-
         tokenlst = []
         
         for i in range(int(len(cordlst))):
-
             if cordlst[i].returnself() not in tokenlst:
                 tokenlst.append(cordlst[i].returnself())
 
@@ -325,7 +304,6 @@ def start():
 
         while True:
             time.sleep(10)
-
             scr = pyautogui.screenshot()
             scr.save("src.png")
             over = False
@@ -361,6 +339,5 @@ def start():
 
 
 b1 = Button(main,text="Begin",command=start)
-
 b1.pack()
 main.mainloop()
