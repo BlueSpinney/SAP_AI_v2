@@ -98,8 +98,6 @@ def look_for_duplicat(name):
             return [True,i]
     return [False,None]
 
-
-
 def drag_and_drop(upper : list,down: list,available_items : dict,):
     global chupper,Change_Reward
 
