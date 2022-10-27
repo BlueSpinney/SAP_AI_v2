@@ -1,4 +1,6 @@
 #Super Auto Pets AI work in Progress pre Alpha Version (with partial item recognition) v3.3
+#TO-DO
+#Optimize animal recognition
 
 from tkinter import *
 import pyautogui
