@@ -2,6 +2,7 @@
 #TO-DO
 #Optimize animal recognition
 #add full Item usage
+#Optimze Item recognition
 
 from tkinter import *
 import pyautogui
