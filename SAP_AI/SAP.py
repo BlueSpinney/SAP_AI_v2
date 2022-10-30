@@ -1,4 +1,4 @@
-#Super Auto Pets AI work in Progress pre Alpha Version (with partial item recognition) v3.3
+#Super Auto Pets AI work in Progress pre Alpha Version
 #TO-DO
 #Optimize animal recognition
 #add full Item usage
