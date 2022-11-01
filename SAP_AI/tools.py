@@ -1,6 +1,5 @@
 # Funktions for the Ai Stored in this script to make the main script less messy :)
 import json
-
 #time O(1) Space O(1) | Constant Time && Space
 def is_best_option(slot,downIndex,value_List):
 
@@ -16,13 +15,10 @@ def fetch_animal_Value_data(Animal):
 
     name = Animal[0]
     name = name[48:len(name)-4]
-
     try:
         return animal_Values[name]
     except:
         return None
-
-
 #Time O(n)  n = len(animal_Values) Space O(n) n = animal_Values | liniar Time
 def Adjust_Animal_Values(animal_Values,current_slot_index):
     for key in animal_Values.keys():
