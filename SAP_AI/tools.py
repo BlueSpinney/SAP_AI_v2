@@ -2,7 +2,6 @@
 import json
 #time O(1) Space O(1) | Constant Time && Space
 def is_best_option(slot,downIndex,value_List):
-
     if value_List[downIndex] == max(value_List) and max(value_List) > slot.val:
         return True
     else:
