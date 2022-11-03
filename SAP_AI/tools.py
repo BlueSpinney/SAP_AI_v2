@@ -6,7 +6,6 @@ def is_best_option(slot,downIndex,value_List):
         return True
     else:
         return False
-
 #Time O(1) Space O(1) | Constant Space && Time
 def fetch_animal_Value_data(Animal):
     json_File = open('animalValues.json')
