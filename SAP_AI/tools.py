@@ -22,7 +22,6 @@ def Adjust_Animal_Values(animal_Values,current_slot_index):
     for key in animal_Values.keys():
         if animal_Values[key] == None:
             continue
-
         if key == 'preffedPos':
             if current_slot_index in animal_Values[key]:
                 animal_Values['stanValue'] += 3
