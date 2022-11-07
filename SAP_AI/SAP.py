@@ -1,10 +1,8 @@
 #Super Auto Pets AI work in Progress pre Alpha Version
-
 #TO-DO
 #Optimize animal recognition
 #add full Item usage
 #Optimze Item recognition
-
 from tkinter import *
 import pyautogui
 import cv2 as cv
