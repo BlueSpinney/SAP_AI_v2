@@ -12,7 +12,6 @@ import valueRecogniton as VR
 import itemrec as IR
 from random import randint, randrange
 import toolkit as tools
-
 lost = False
 
 #add all the other animals
