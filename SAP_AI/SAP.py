@@ -23,7 +23,6 @@ hitman = []
 chupper = []
 name_cordinates_1 = [(375, 399),(942, 399),(1528, 399)]
 name_cordinates_2 = [(375, 691),(942, 691),(1528, 691)]
-
 Change_Reward = 0
 
 class slot:
