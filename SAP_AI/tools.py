@@ -10,7 +10,6 @@ def is_best_option(slot,downIndex,value_List):
 def fetch_animal_Value_data(Animal):
     json_File = open('animalValues.json')
     animal_Values = json.load(json_File)
-
     name = Animal[0]
     name = name[48:len(name)-4]
     try:
